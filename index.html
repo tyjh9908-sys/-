@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>亞太棒球場散場｜流量趨勢圖</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page-plane:     #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --gridline:       #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --series-dynamic: #2a78d6; /* 動態控制 - blue */
+    --series-manual:  #eb6834; /* 手動調整 - orange */
+    --series-normal:  #9a988f; /* 常態 - muted gray */
+    --peak-fill:      rgba(235, 104, 52, 0.07);
+    --good: #006300;
+    --bad:  #b3261e;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background: var(--page-plane); font-family: system-ui,-apple-system,"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif; color: var(--text-primary); }
+  .page { max-width: 1180px; margin: 0 auto; padding: 32px 28px 48px; }
+  .masthead { display:flex; align-items:baseline; justify-content:space-between; border-bottom:2px solid var(--text-primary); padding-bottom:12px; margin-bottom:6px; }
+  .masthead h1 { font-size:24px; font-weight:700; margin:0; }
+  .masthead .agency { font-size:13px; color:var(--text-muted); }
+  .subtitle { font-size:13px; color:var(--text-secondary); margin:10px 0 26px; }
+  .subtitle b { color:var(--text-primary); }
+
+  .section-label { font-size:14px; font-weight:700; margin:28px 0 12px; display:flex; align-items:center; gap:8px; }
+  .section-label::before { content:""; width:4px; height:16px; background:var(--series-dynamic); display:inline-block; border-radius:2px; }
+
+  .chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .chart-card { background:var(--surface-1); border:1px solid var(--border); border-radius:10px; padding:18px 20px 8px; position:relative; }
+  .chart-card h3 { font-size:14px; margin:0 0 2px; font-weight:700; }
+  .chart-card .chart-note { font-size:11.5px; color:var(--text-muted); margin-bottom:10px; }
+  .legend { display:flex; gap:16px; font-size:11.5px; color:var(--text-secondary); margin-bottom:6px; flex-wrap:wrap; }
+  .legend .item { display:flex; align-items:center; gap:6px; }
+  .legend .swatch { width:14px; height:3px; border-radius:2px; display:inline-block; }
+
+  .stat-row { display:flex; gap:10px; margin: 2px 0 14px; }
+  .stat-pill { flex:1; background:#f4f3f0; border-radius:8px; padding:8px 10px; }
+  .stat-pill .k { font-size:10.5px; color:var(--text-muted); }
+  .stat-pill .v { font-size:14px; font-weight:700; }
+  .stat-pill .v.up { color: var(--good); }
+  .stat-pill .v.down { color: var(--bad); }
+
+  svg { display:block; overflow:visible; }
+  .gridline { stroke:var(--gridline); stroke-width:1; }
+  .baseline { stroke:var(--baseline); stroke-width:1.2; }
+  .axis-text { fill:var(--text-muted); font-size:9.5px; }
+  .peak-band { fill: var(--peak-fill); }
+  .peak-label { fill:#b85221; font-size:10px; font-weight:600; }
+  .series-line { fill:none; stroke-width:2; stroke-linejoin:round; stroke-linecap:round; }
+  .end-dot { stroke: var(--surface-1); stroke-width:2; }
+  .tooltip { position:absolute; pointer-events:none; background:var(--text-primary); color:#fff; font-size:11px; padding:7px 10px; border-radius:6px; line-height:1.5; opacity:0; transition:opacity .08s; z-index:5; white-space:nowrap; }
+  .tooltip b { font-weight:700; }
+  .hover-rule { stroke: var(--text-muted); stroke-width:1; stroke-dasharray:2 2; opacity:0; }
+
+  .callout { margin-top:10px; font-size:11px; color:var(--text-secondary); line-height:1.6; }
+  .footnote { margin-top:26px; font-size:11px; color:var(--text-muted); line-height:1.7; border-top:1px solid var(--gridline); padding-top:12px; }
+  .warn-box { margin-top:22px; background:#fdf3ea; border:1px solid #ecd3b3; border-radius:10px; padding:14px 18px; font-size:12px; color:#5c4222; line-height:1.7; }
+  .warn-box b { color:#8a4a12; }
+</style>
+</head>
+<body>
+<div class="viz-root">
+<div class="page">
+
+  <div class="masthead">
+    <h1>亞太棒球場散場｜流量趨勢圖</h1>
+    <div class="agency">臺南市政府交通局</div>
+  </div>
+  <div class="subtitle">
+    全場域（C114065＋C114075 雙設備平均）· 手動調整 vs. 動態控制 vs. 常態 · 逐5分鐘流量（輛／5分）
+  </div>
+
+  <div class="section-label">散場期間流量趨勢（單一指標，僅流量）</div>
+  <div class="chart-grid">
+
+    <div class="chart-card">
+      <h3>工作日</h3>
+      <div class="chart-note">橘色網底為動態流量領先手動之關鍵疏運窗（散場起點–第25分）</div>
+      <div class="legend">
+        <span class="item"><span class="swatch" style="background:var(--series-dynamic)"></span>動態控制平均流量</span>
+        <span class="item"><span class="swatch" style="background:var(--series-manual)"></span>手動調整平均流量</span>
+        <span class="item"><span class="swatch" style="background:var(--series-normal)"></span>常態平均流量</span>
+      </div>
+      <div class="stat-row">
+        <div class="stat-pill"><div class="k">起點–第25分 平均流量</div><div class="v up">動態 211.2　手動 145.9　(+44.8%)</div></div>
+        <div class="stat-pill"><div class="k">全程（100分）流量總和</div><div class="v up">動態 2330　手動 2280　(+2.2%)</div></div>
+      </div>
+      <div id="chart-weekday" class="chart-wrap" style="position:relative;"></div>
+    </div>
+
+    <div class="chart-card">
+      <h3>休假日</h3>
+      <div class="chart-note">橘色網底為動態流量領先手動之關鍵疏運窗（散場起點–第25分）</div>
+      <div class="legend">
+        <span class="item"><span class="swatch" style="background:var(--series-dynamic)"></span>動態控制平均流量</span>
+        <span class="item"><span class="swatch" style="background:var(--series-manual)"></span>手動調整平均流量</span>
+        <span class="item"><span class="swatch" style="background:var(--series-normal)"></span>常態平均流量</span>
+      </div>
+      <div class="stat-row">
+        <div class="stat-pill"><div class="k">起點–第25分 平均流量</div><div class="v up">動態 236.0　手動 214.2　(+10.1%)</div></div>
+        <div class="stat-pill"><div class="k">全程（100分）流量總和</div><div class="v down">動態 3187　手動 3920　(－18.7%)</div></div>
+      </div>
+      <div id="chart-weekend" class="chart-wrap" style="position:relative;"></div>
+    </div>
+
+  </div>
+
+  <div class="warn-box">
+    <b>数字上要提醒你：</b>「動態控制增加整體紓解量」這句話，只有工作日的「全程流量總和」勉強站得住（+2.2%，其實差異很小），休假日反而是<b>動態控制的全程流量總和比手動低18.7%</b>——不是動態控制讓車變少了，而是散場主波段本來就從72分縮短到45分，同樣的車潮在更短時間內通過，用固定100分鐘視窗去加總，動態組自然看起來「總量」比較低。<br><br>
+    真正兩種日型都穩定支持的證據，是<b>「起點到第25分」這段賽事剛結束的關鍵窗口</b>：動態控制的平均流量都明顯高於手動（工作日+44.8%、休假日+10.1%），也就是動態號誌能在散場最初期就讓更多車輛通過路口、更快把車潮往外送，這才是「壅塞時長縮短」真正的成因——不是總車流變多，而是<b>疏運速度更快、尖峰處理能力更強</b>。建議簡報上把「增加整體紓解量」改成「提升散場初期路口通過能力，加速疏運」，數字才站得住腳。
+  </div>
+
+  <div class="footnote">
+    資料來源：台南北外環交通績效分析（Density × Waiting 互動分析，球賽散場模組，全場域雙設備平均流量折線圖，逐像素座標換算回原始數值）。流量單位：輛／5分鐘。
+  </div>
+
+</div>
+</div>
+
+<script>
+const LABELS = ["散場前10分","散場前5分","散場起點","第5分","第10分","第15分","第20分","第25分","第30分","第35分","第40分","第45分","第50分","第55分","第60分","第65分","第70分","第75分","第80分","第85分","第90分"];
+const PEAK_START = 2, PEAK_END = 7; // 散場起點 → 第25分：動態流量領先手動的關鍵疏運窗
+
+const FLOW = {
+  weekday: {
+    normal:  [48.8,45.2,41.4,40.9,43.5,32.5,43.2,33.9,43.5,27.6,35.4,27.1,40.6,22.7,35.7,23.5,30.7,23.8,29.0,23.5,30.6],
+    manual:  [73.3,101.2,125.2,130.7,136.2,169.1,171.7,142.7,190.1,142.2,131.2,89.8,86.2,77.2,91.7,73.8,81.3,70.8,72.3,52.3,70.8],
+    dynamic: [89.6,79.9,148.2,187.8,240.4,256.0,242.4,192.5,103.6,98.9,100.9,70.9,87.6,67.3,81.6,56.9,65.9,41.7,43.3,36.6,38.3]
+  },
+  weekend: {
+    normal:  [45.8,44.7,65.9,50.6,36.2,51.0,50.9,38.9,36.9,42.1,43.8,52.8,37.2,32.3,39.9,41.4,38.0,31.1,32.4,27.3,34.6],
+    manual:  [109.3,126.9,150.6,210.7,174.3,240.6,243.3,265.7,253.7,262.6,177.3,246.3,168.6,177.9,217.3,240.6,148.7,164.0,143.3,103.3,94.6],
+    dynamic: [116.6,158.6,155.6,163.6,228.6,268.6,344.7,254.7,269.6,203.7,112.6,96.6,100.6,117.6,91.6,86.6,94.6,88.6,77.6,86.6,69.6]
+  }
+};
+
+function getComputedColor(varName) {
+  return getComputedStyle(document.querySelector(".viz-root")).getPropertyValue(varName).trim();
+}
+
+function buildFlowChart(containerId, d) {
+  const container = document.getElementById(containerId);
+  const width = 500, height = 300;
+  const margin = { top: 28, right: 14, bottom: 34, left: 46 };
+  const innerW = width - margin.left - margin.right;
+  const innerH = height - margin.top - margin.bottom;
+
+  const allVals = [].concat(d.normal, d.manual, d.dynamic);
+  const rawMax = Math.max(...allVals);
+  const step = 50;
+  const yMax = Math.ceil(rawMax / step) * step;
+  const yMin = 0;
+
+  const n = LABELS.length;
+  const xPos = i => margin.left + (innerW * i) / (n - 1);
+  const yPos = v => margin.top + innerH * (1 - (v - yMin) / (yMax - yMin));
+
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  svg.setAttribute("width", "100%");
+  svg.setAttribute("height", height);
+
+  const band = document.createElementNS(svgNS, "rect");
+  band.setAttribute("x", xPos(PEAK_START));
+  band.setAttribute("y", margin.top);
+  band.setAttribute("width", xPos(PEAK_END) - xPos(PEAK_START));
+  band.setAttribute("height", innerH);
+  band.setAttribute("class", "peak-band");
+  svg.appendChild(band);
+
+  const ticks = 5;
+  for (let t = 0; t <= ticks; t++) {
+    const v = yMin + ((yMax - yMin) * t) / ticks;
+    const y = yPos(v);
+    const line = document.createElementNS(svgNS, "line");
+    line.setAttribute("x1", margin.left); line.setAttribute("x2", width - margin.right);
+    line.setAttribute("y1", y); line.setAttribute("y2", y);
+    line.setAttribute("class", t === 0 ? "baseline" : "gridline");
+    svg.appendChild(line);
+    const label = document.createElementNS(svgNS, "text");
+    label.setAttribute("x", margin.left - 8); label.setAttribute("y", y + 3);
+    label.setAttribute("text-anchor", "end"); label.setAttribute("class", "axis-text");
+    label.textContent = Math.round(v);
+    svg.appendChild(label);
+  }
+
+  LABELS.forEach((lab, i) => {
+    if (i % 4 !== 0 && i !== n - 1) return;
+    const text = document.createElementNS(svgNS, "text");
+    text.setAttribute("x", xPos(i)); text.setAttribute("y", height - margin.bottom + 16);
+    text.setAttribute("text-anchor", "middle"); text.setAttribute("class", "axis-text");
+    text.textContent = lab.replace("散場前", "前").replace("散場起點", "起點");
+    svg.appendChild(text);
+  });
+
+  const bandMidX = (xPos(PEAK_START) + xPos(PEAK_END)) / 2;
+  const connector = document.createElementNS(svgNS, "line");
+  connector.setAttribute("x1", bandMidX); connector.setAttribute("x2", bandMidX);
+  connector.setAttribute("y1", 14); connector.setAttribute("y2", margin.top);
+  connector.setAttribute("stroke", "#b85221"); connector.setAttribute("stroke-width", "1");
+  connector.setAttribute("stroke-dasharray", "2 2");
+  svg.appendChild(connector);
+
+  const peakLabel = document.createElementNS(svgNS, "text");
+  peakLabel.setAttribute("x", bandMidX);
+  peakLabel.setAttribute("y", 11);
+  peakLabel.setAttribute("text-anchor", "middle"); peakLabel.setAttribute("class", "peak-label");
+  peakLabel.textContent = "疏運關鍵窗：起點–25分";
+  svg.appendChild(peakLabel);
+
+  function drawSeries(vals, color) {
+    let dd = "";
+    vals.forEach((v, i) => {
+      const x = xPos(i), y = yPos(v);
+      dd += (i === 0 ? "M" : "L") + x.toFixed(1) + " " + y.toFixed(1) + " ";
+    });
+    const path = document.createElementNS(svgNS, "path");
+    path.setAttribute("d", dd.trim());
+    path.setAttribute("class", "series-line");
+    path.setAttribute("stroke", color);
+    svg.appendChild(path);
+    const lastI = vals.length - 1;
+    const dot = document.createElementNS(svgNS, "circle");
+    dot.setAttribute("cx", xPos(lastI)); dot.setAttribute("cy", yPos(vals[lastI]));
+    dot.setAttribute("r", 4); dot.setAttribute("fill", color); dot.setAttribute("class", "end-dot");
+    svg.appendChild(dot);
+  }
+
+  drawSeries(d.normal, getComputedColor("--series-normal"));
+  drawSeries(d.manual, getComputedColor("--series-manual"));
+  drawSeries(d.dynamic, getComputedColor("--series-dynamic"));
+
+  const hoverRule = document.createElementNS(svgNS, "line");
+  hoverRule.setAttribute("y1", margin.top); hoverRule.setAttribute("y2", margin.top + innerH);
+  hoverRule.setAttribute("class", "hover-rule");
+  svg.appendChild(hoverRule);
+
+  const hitRect = document.createElementNS(svgNS, "rect");
+  hitRect.setAttribute("x", margin.left); hitRect.setAttribute("y", margin.top);
+  hitRect.setAttribute("width", innerW); hitRect.setAttribute("height", innerH);
+  hitRect.setAttribute("fill", "transparent");
+  svg.appendChild(hitRect);
+
+  container.style.position = "relative";
+  container.appendChild(svg);
+  const tooltip = document.createElement("div");
+  tooltip.className = "tooltip";
+  container.appendChild(tooltip);
+
+  hitRect.addEventListener("mousemove", (e) => {
+    const rect = svg.getBoundingClientRect();
+    const scaleX = width / rect.width;
+    const mx = (e.clientX - rect.left) * scaleX;
+    let idx = Math.round(((mx - margin.left) / innerW) * (n - 1));
+    idx = Math.max(0, Math.min(n - 1, idx));
+    const x = xPos(idx);
+    hoverRule.setAttribute("x1", x); hoverRule.setAttribute("x2", x);
+    hoverRule.style.opacity = 1;
+    tooltip.innerHTML = `<b>${LABELS[idx]}</b><br>動態：${d.dynamic[idx].toFixed(1)}<br>手動：${d.manual[idx].toFixed(1)}<br>常態：${d.normal[idx].toFixed(1)}`;
+    tooltip.style.opacity = 1;
+    const cRect = container.getBoundingClientRect();
+    let left = (x / scaleX) + 12;
+    if (left + 120 > cRect.width) left = (x / scaleX) - 130;
+    tooltip.style.left = left + "px";
+    tooltip.style.top = "6px";
+  });
+  hitRect.addEventListener("mouseleave", () => { hoverRule.style.opacity = 0; tooltip.style.opacity = 0; });
+}
+
+buildFlowChart("chart-weekday", FLOW.weekday);
+buildFlowChart("chart-weekend", FLOW.weekend);
+</script>
+</body>
+</html>
