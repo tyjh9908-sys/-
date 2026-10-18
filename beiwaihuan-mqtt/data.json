@@ -331,69 +331,149 @@
   ],
   "zones": [
     {
-      "name": "C · zone1",
+      "name": "C115040 · zone1",
       "stream": "869e7bd7-de75-468c-ab5a-9b553b83381f",
       "worst": 57.05313937164212,
       "best": 37.88161550679992,
-      "delta": 19.1715238648422
+      "delta": 19.1715238648422,
+      "zone": "zone1",
+      "deviceId": "C115040",
+      "deviceName": "樹谷聯絡道與北外環道路口東桿(向東)-廣角",
+      "alias": "C"
     },
     {
-      "name": "D · zone2",
+      "name": "C115039 · zone2",
       "stream": "f954c67e-201f-482f-a7aa-9810a247ae15",
       "worst": 33.15290114367819,
       "best": 19.902757333477904,
-      "delta": 13.250143810200289
+      "delta": 13.250143810200289,
+      "zone": "zone2",
+      "deviceId": "C115039",
+      "deviceName": "樹谷聯絡道與北外環道路口北桿(向北)-廣角",
+      "alias": "D"
     },
     {
-      "name": "D · zone1",
+      "name": "C115039 · zone1",
       "stream": "f954c67e-201f-482f-a7aa-9810a247ae15",
       "worst": 23.770238827545565,
       "best": 13.641069438223258,
-      "delta": 10.129169389322307
+      "delta": 10.129169389322307,
+      "zone": "zone1",
+      "deviceId": "C115039",
+      "deviceName": "樹谷聯絡道與北外環道路口北桿(向北)-廣角",
+      "alias": "D"
     },
     {
-      "name": "D · zone3",
+      "name": "C115039 · zone3",
       "stream": "f954c67e-201f-482f-a7aa-9810a247ae15",
       "worst": 14.416926204619145,
       "best": 11.02035097370859,
-      "delta": 3.396575230910555
+      "delta": 3.396575230910555,
+      "zone": "zone3",
+      "deviceId": "C115039",
+      "deviceName": "樹谷聯絡道與北外環道路口北桿(向北)-廣角",
+      "alias": "D"
     },
     {
-      "name": "B · zone1",
+      "name": "C115041 · zone1",
       "stream": "7a490dcf-527c-4cfa-abfd-d1464cd625fd",
       "worst": 17.211023253360516,
       "best": 14.328641255309112,
-      "delta": 2.882381998051404
+      "delta": 2.882381998051404,
+      "zone": "zone1",
+      "deviceId": "C115041",
+      "deviceName": "樹谷聯絡道與北外環道路口南桿(向西)-廣角",
+      "alias": "B"
     },
     {
-      "name": "A · zone1",
+      "name": "C115042 · zone1",
       "stream": "34fe176e-524a-4b3e-b782-558f347a5dde",
       "worst": 3.2075564188889265,
       "best": 2.668382393069153,
-      "delta": 0.5391740258197735
+      "delta": 0.5391740258197735,
+      "zone": "zone1",
+      "deviceId": "C115042",
+      "deviceName": "樹谷聯絡道與北外環道路口西桿(向匝道)-廣角",
+      "alias": "A"
     },
     {
-      "name": "A · zone2",
+      "name": "C115042 · zone2",
       "stream": "34fe176e-524a-4b3e-b782-558f347a5dde",
       "worst": 0.0,
       "best": 0.0055567527382390835,
-      "delta": -0.0055567527382390835
+      "delta": -0.0055567527382390835,
+      "zone": "zone2",
+      "deviceId": "C115042",
+      "deviceName": "樹谷聯絡道與北外環道路口西桿(向匝道)-廣角",
+      "alias": "A"
     },
     {
-      "name": "B · zone3",
+      "name": "C115041 · zone3",
       "stream": "7a490dcf-527c-4cfa-abfd-d1464cd625fd",
       "worst": 0.07999870291330785,
       "best": 0.2184413800194057,
-      "delta": -0.13844267710609784
+      "delta": -0.13844267710609784,
+      "zone": "zone3",
+      "deviceId": "C115041",
+      "deviceName": "樹谷聯絡道與北外環道路口南桿(向西)-廣角",
+      "alias": "B"
     },
     {
-      "name": "B · zone2",
+      "name": "C115041 · zone2",
       "stream": "7a490dcf-527c-4cfa-abfd-d1464cd625fd",
       "worst": 14.722658631465528,
       "best": 16.470036281547017,
-      "delta": -1.7473776500814893
+      "delta": -1.7473776500814893,
+      "zone": "zone2",
+      "deviceId": "C115041",
+      "deviceName": "樹谷聯絡道與北外環道路口南桿(向西)-廣角",
+      "alias": "B"
     }
   ],
   "normalDays": 29,
-  "validDays": 46
+  "validDays": 46,
+  "cameras": [
+    {
+      "stream": "f954c67e-201f-482f-a7aa-9810a247ae15",
+      "alias": "D",
+      "deviceId": "C115039",
+      "deviceName": "樹谷聯絡道與北外環道路口北桿(向北)-廣角",
+      "sourceSheet": "建構",
+      "sourceRange": "A17:C17"
+    },
+    {
+      "stream": "869e7bd7-de75-468c-ab5a-9b553b83381f",
+      "alias": "C",
+      "deviceId": "C115040",
+      "deviceName": "樹谷聯絡道與北外環道路口東桿(向東)-廣角",
+      "sourceSheet": "建構",
+      "sourceRange": "A20:C20"
+    },
+    {
+      "stream": "7a490dcf-527c-4cfa-abfd-d1464cd625fd",
+      "alias": "B",
+      "deviceId": "C115041",
+      "deviceName": "樹谷聯絡道與北外環道路口南桿(向西)-廣角",
+      "sourceSheet": "建構",
+      "sourceRange": "A21:C21"
+    },
+    {
+      "stream": "34fe176e-524a-4b3e-b782-558f347a5dde",
+      "alias": "A",
+      "deviceId": "C115042",
+      "deviceName": "樹谷聯絡道與北外環道路口西桿(向匝道)-廣角",
+      "sourceSheet": "建構",
+      "sourceRange": "A24:C24"
+    }
+  ],
+  "deviceMappingSource": {
+    "filename": "樹谷案設備偵測_0827_現場偵測.xlsx",
+    "sheet": "建構",
+    "ranges": [
+      "A17:C17",
+      "A20:C20",
+      "A21:C21",
+      "A24:C24"
+    ]
+  }
 }
